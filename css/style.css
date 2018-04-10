@@ -1010,6 +1010,10 @@ main {
   padding-bottom: 20px;
 }
 
+.social__comment--content {
+  max-width: 500px;
+}
+
 .social__comment-count,
 .social__comment-loadmore {
   padding-left: 65px;
