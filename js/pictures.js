@@ -2,6 +2,7 @@
 
 var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var DISCRIPTION = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
+var PHOTOS_AMMOUNT = 25;
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 var pictureElement = document.querySelector('.pictures');
@@ -13,18 +14,18 @@ var getUrl = function (urlNumber) {
 
 
 var getLikes = function () {
-  var likes = Math.floor((Math.random() * 200) + 15);
+  var likes = Math.floor((Math.random() * 185) + 15);
   return likes;
 };
 
 var getComments = function () {
   var commentsAmmount = Math.floor((Math.random() * 2) + 1);
-  var res = [];
+  var commentsArray = [];
   for (var i = 0; i < commentsAmmount; i++) {
     var comment = COMMENTS[Math.floor(Math.random() * COMMENTS.length)];
-    res.push(comment);
+    commentsArray.push(comment);
   }
-  return res;
+  return commentsArray;
 };
 
 var getDiscription = function () {
@@ -33,7 +34,7 @@ var getDiscription = function () {
 };
 
 var generatePhotosArray = function (photosAmmount) {
-  var res = [];
+  var photosArray = [];
   for (var i = 1; i <= photosAmmount; i++) {
     var photo = {
       url: getUrl(i),
@@ -41,9 +42,9 @@ var generatePhotosArray = function (photosAmmount) {
       comments: getComments(),
       description: getDiscription()
     };
-    res.push(photo);
+    photosArray.push(photo);
   }
-  return res;
+  return photosArray;
 };
 
 
@@ -64,42 +65,111 @@ var renderAllPhotos = function (photos) {
   pictureElement.appendChild(fragment);
 };
 
-var allPhotos = generatePhotosArray(25);
+var allPhotos = generatePhotosArray(PHOTOS_AMMOUNT);
 renderAllPhotos(allPhotos);
 
-var bigPicture = document.querySelector('.big-picture');
-bigPicture.classList.remove('hidden');
+// BIG PHOTO//
 
-var renderComments = function (photo) {
-  var listItemElements = bigPicture.querySelectorAll('.social__comment');
-  for (var i = 0; i < listItemElements.length; i++) {
-    var listItemElement = listItemElements[i];
-    var comment = photo.comments[i];
+var bigPhoto = document.querySelector('.big-picture');
+bigPhoto.classList.remove('hidden');
+var commentsElement = document.querySelector('.social__comments');
+var commentTemplate = document.querySelector('#comment-template').content.querySelector('.social__comment');
 
-    if (comment) {
-      var textElement = listItemElement.querySelector('.social__comment--content');
-      textElement.textContent = comment;
-    } else {
-      listItemElement.classList.add('visually-hidden');
-    }
+var renderOneComment = function (comment) {
+  var commentListElement = commentTemplate.cloneNode(true);
+  var srcNumber = Math.floor((Math.random() * 6) + 1);
+  commentListElement.querySelector('.social__comment--content').textContent = comment;
+  commentListElement.querySelector('.social__picture').src = 'img/avatar-' + srcNumber + '.svg';
+  return commentListElement;
+};
+
+var renderComments = function (comments) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < comments.length; i++) {
+    var commentListElement = renderOneComment(comments[i]);
+    fragment.appendChild(commentListElement);
   }
+  commentsElement.appendChild(fragment);
 };
 
 var renderBigPhoto = function (photo) {
   var avatarNumber = Math.floor((Math.random() * 6) + 1);
-  bigPicture.querySelector('.big-picture__img').src = photo.url;
-  bigPicture.querySelector('.likes-count').textContent = photo.likes;
-  bigPicture.querySelector('.social__picture').src = 'img/avatar-' + avatarNumber + '.svg';
-  bigPicture.querySelector('.comments-count').textContent = photo.comments.length;
-  renderComments(allPhotos[0]);
+  bigPhoto.querySelector('.big-picture__img').src = photo.url;
+  bigPhoto.querySelector('.likes-count').textContent = photo.likes;
+  bigPhoto.querySelector('.social__picture').src = 'img/avatar-' + avatarNumber + '.svg';
+  bigPhoto.querySelector('.comments-count').textContent = photo.comments.length;
+  renderComments(allPhotos[0].comments);
 };
 
-
-var commentsCount = bigPicture.querySelector('.social__comment-count');
-var commentsLoadmore = bigPicture.querySelector('.social__comment-loadmore');
+var commentsCount = bigPhoto.querySelector('.social__comment-count');
+var commentsLoadmore = bigPhoto.querySelector('.social__comment-loadmore');
 commentsCount.classList.add('visually-hidden');
 commentsLoadmore.classList.add('visually-hidden');
 
-// main
 
 renderBigPhoto(allPhotos[0]);
+
+// UPLOAD
+//
+// var form = document.querySelector('.img-upload__form');
+// var imageUploadOverlay = form.querySelector('.img-upload__overlay');
+// var fileUploader = form.querySelector('.img-upload__input');
+// var closeButton = form.querySelector('.img-upload__cancel');
+// var ESC = 27;
+// var ENTER = 13;
+//
+// var onPopupEscPress = function (evt) {
+//   if (evt.keyCode === ESC) {
+//     hideForm();
+//   }
+// };
+//
+// var showForm = function () {
+//   imageUploadOverlay.classList.remove('hidden');
+//   document.addEventListener('keydown', onPopupEscPress);
+// };
+//
+// var hideForm = function () {
+//   imageUploadOverlay.classList.add('hidden');
+//   document.removeEventListener('keydown', onPopupEscPress);
+// };
+//
+// var onUploadClick = function () {
+//   showForm();
+// };
+//
+// var onCloseButtonClick = function () {
+//   hideForm();
+// };
+//
+// // var onUploadPress = function (evt) {
+// //   if (evt.keyCode === ENTER) {
+// //     showForm();
+// //   }
+// // };
+//
+// var onCloseButtonPress = function (evt) {
+//   if (evt.keyCode === ENTER) {
+//     hideForm();
+//   }
+// };
+//
+// fileUploader.addEventListener('change', onUploadClick);
+// closeButton.addEventListener('click', onCloseButtonClick);
+// // fileUploader.addEventListener('change', onUploadClick);
+// closeButton.addEventListener('keydown', onCloseButtonPress);
+//
+//
+// // Слайдер//
+//
+// var scalePin = form.querySelector('.scale__pin');
+//
+// var renderSaturation = function () {
+//
+// };
+//
+// var onPinClick = function () {
+//   renderSaturation();
+// };
+//
+// scalePin.addEventListener('mouseup', onPinClick);
