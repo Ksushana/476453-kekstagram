@@ -203,13 +203,21 @@ var onFormEscPress = function (evt) {
 var scale = form.querySelector('.scale');
 var scalePin = scale.querySelector('.scale__pin');
 var formImgElement = form.querySelector('.img-upload__preview img');
+var effectLevelInput = form.querySelector('.scale__value');
 
-var onScalePinMouseUp = function () {
-  applyFilter();
+var getSpinPercent = function () {
+  var percent = parseInt(scalePin.style.left, 10);
+  return percent;
 };
 
-var onEffectRadioInputChange = function () {
-  applyFilter();
+var changeSpinPosition = function (percent) {
+  var effectLevel = scale.querySelector('.scale__level');
+  if (!percent && percent !== 0) {
+    percent = 100;
+  }
+
+  scalePin.style.left = percent + '%';
+  effectLevel.style.width = percent + '%';
 };
 
 var hideScale = function () {
@@ -221,26 +229,74 @@ var showScale = function () {
 };
 
 var applyFilter = function () {
-  var filterName = form.querySelector('.effects__radio:checked').value;
-
-  if (filterName === 'none') {
+  var percent = effectLevelInput.value;
+  var effectName = form.querySelector('.effects__radio:checked').value;
+  if (effectName === 'none') {
     hideScale();
   } else {
     showScale();
   }
-  applyFilterCss(filterName);
+  applyFilterCss(effectName, percent);
 };
 
-var applyFilterCss = function (effect) {
+var applyFilterCss = function (effect, percent) {
   var cssClass = 'effects__preview--' + effect;
   formImgElement.className = '';
   formImgElement.classList.add(cssClass);
+  var filterValue = calcFilterValue(effect, percent);
+  formImgElement.style.webkitFilter = filterValue;
+  formImgElement.style.filter = filterValue;
 };
 
 var resetFilters = function () {
   form.querySelector('.effects__radio:checked').checked = false;
   formImgElement.className = '';
 };
+
+var EFFECT_PARAMS = {
+  chrome: {filter: 'grayscale', min: 0, max: 1, unit: null},
+  sepia: {filter: 'sepia', min: 0, max: 1, unit: null},
+  marvin: {filter: 'invert', min: 0, max: 100, unit: '%'},
+  phobos: {filter: 'blur', min: 0, max: 3, unit: 'px'},
+  heat: {filter: 'brightness', min: 1, max: 3, unit: null}
+};
+
+var calcFilterValue = function (effect, percent) {
+  if (effect === 'none') {
+    return '';
+  }
+
+  var effectParams = EFFECT_PARAMS[effect];
+  var filterName = effectParams.filter;
+  var rangeMin = effectParams.min;
+  var rangeMax = effectParams.max;
+  var unit = effectParams.unit || '';
+  var range = rangeMax - rangeMin;
+
+  var filterNumberValue = range * (percent / 100) + rangeMin;
+  var filterValue = filterName + '(' + filterNumberValue + unit + ')';
+  return filterValue;
+};
+
+var changeEffectLevel = function () {
+  effectLevelInput.value = getSpinPercent();
+  applyFilter();
+};
+
+var changeEffect = function () {
+  changeSpinPosition(100);
+  effectLevelInput.value = 100;
+  applyFilter();
+};
+
+var onScalePinMouseUp = function () {
+  changeEffectLevel();
+};
+
+var onEffectRadioInputChange = function () {
+  changeEffect();
+};
+
 
 // РЕСАЙЗ
 
@@ -280,7 +336,6 @@ var onResizeIncreasingButton = function () {
   increasePhotoSize();
 };
 
-(function () {
-  fileInput.addEventListener('change', onFileInputChange);
-  renderAllPhotos(allPhotos);
-})();
+
+fileInput.addEventListener('change', onFileInputChange);
+renderAllPhotos(allPhotos);
