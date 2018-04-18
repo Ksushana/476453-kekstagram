@@ -15,9 +15,18 @@ var ESC = 27;
 var RESIZE_STEP = 25;
 var RESIZE_MIN_VALUE = 25;
 var RESIZE_MAX_VALUE = 100;
+var EFFECT_PARAMS = {
+  chrome: {filter: 'grayscale', min: 0, max: 1, unit: null},
+  sepia: {filter: 'sepia', min: 0, max: 1, unit: null},
+  marvin: {filter: 'invert', min: 0, max: 100, unit: '%'},
+  phobos: {filter: 'blur', min: 0, max: 3, unit: 'px'},
+  heat: {filter: 'brightness', min: 1, max: 3, unit: null}
+};
+var SPIN_DEFAULT_VALUE = 100;
 
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 var pictureElement = document.querySelector('.pictures');
+var form = document.querySelector('.img-upload__form');
 
 var getRandomInteger = function (max, min) {
   min = min || DEFAULT_RAMDOM_MIN;
@@ -142,12 +151,24 @@ var renderBigPhoto = function (photo) {
 
 // UPLOAD
 
-var form = document.querySelector('.img-upload__form');
 var imageUploadOverlay = form.querySelector('.img-upload__overlay');
 var fileInput = form.querySelector('.img-upload__input');
 var formCloseButton = form.querySelector('.img-upload__cancel');
 var effectRadioInputs = form.querySelectorAll('.effects__radio');
 
+var addEffectChangeListeners = function () {
+  for (var i = 0; i < effectRadioInputs.length; i++) {
+    var effectRadioInput = effectRadioInputs[i];
+    effectRadioInput.addEventListener('change', onEffectRadioInputChange);
+  }
+};
+
+var removeEffectChangeListeners = function () {
+  for (var i = 0; i < effectRadioInputs.length; i++) {
+    var effectRadioInput = effectRadioInputs[i];
+    effectRadioInput.removeEventListener('change', onEffectRadioInputChange);
+  }
+};
 
 var showForm = function () {
   imageUploadOverlay.classList.remove('hidden');
@@ -158,10 +179,7 @@ var showForm = function () {
   resizeIncreasingButton.addEventListener('click', onResizeIncreasingButton);
   resizeDecreasingButton.addEventListener('click', onResizeDecreasingButton);
 
-  for (var i = 0; i < effectRadioInputs.length; i++) {
-    var effectRadioInput = effectRadioInputs[i];
-    effectRadioInput.addEventListener('change', onEffectRadioInputChange);
-  }
+  addEffectChangeListeners();
   hideScale();
 };
 
@@ -177,10 +195,7 @@ var hideForm = function () {
   resizeIncreasingButton.removeEventListener('click', onResizeIncreasingButton);
   resizeDecreasingButton.removeEventListener('click', onResizeDecreasingButton);
 
-  for (var i = 0; i < effectRadioInputs.length; i++) {
-    var effectRadioInput = effectRadioInputs[i];
-    effectRadioInput.removeEventListener('change', onEffectRadioInputChange);
-  }
+  removeEffectChangeListeners();
   resetFilters();
 };
 
@@ -253,14 +268,6 @@ var resetFilters = function () {
   formImgElement.className = '';
 };
 
-var EFFECT_PARAMS = {
-  chrome: {filter: 'grayscale', min: 0, max: 1, unit: null},
-  sepia: {filter: 'sepia', min: 0, max: 1, unit: null},
-  marvin: {filter: 'invert', min: 0, max: 100, unit: '%'},
-  phobos: {filter: 'blur', min: 0, max: 3, unit: 'px'},
-  heat: {filter: 'brightness', min: 1, max: 3, unit: null}
-};
-
 var calcFilterValue = function (effect, percent) {
   if (effect === 'none') {
     return '';
@@ -268,12 +275,10 @@ var calcFilterValue = function (effect, percent) {
 
   var effectParams = EFFECT_PARAMS[effect];
   var filterName = effectParams.filter;
-  var rangeMin = effectParams.min;
-  var rangeMax = effectParams.max;
   var unit = effectParams.unit || '';
-  var range = rangeMax - rangeMin;
+  var range = effectParams.max - effectParams.min;
 
-  var filterNumberValue = range * (percent / 100) + rangeMin;
+  var filterNumberValue = range * (percent / 100) + effectParams.min;
   var filterValue = filterName + '(' + filterNumberValue + unit + ')';
   return filterValue;
 };
@@ -284,8 +289,8 @@ var changeEffectLevel = function () {
 };
 
 var changeEffect = function () {
-  changeSpinPosition(100);
-  effectLevelInput.value = 100;
+  changeSpinPosition(SPIN_DEFAULT_VALUE);
+  effectLevelInput.value = SPIN_DEFAULT_VALUE;
   applyFilter();
 };
 
