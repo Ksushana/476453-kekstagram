@@ -24,6 +24,7 @@ var EFFECT_PARAMS = {
 };
 var SPIN_DEFAULT_VALUE = 100;
 
+var body = document.querySelector('body');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 var pictureElement = document.querySelector('.pictures');
 var form = document.querySelector('.img-upload__form');
@@ -154,20 +155,13 @@ var renderBigPhoto = function (photo) {
 var imageUploadOverlay = form.querySelector('.img-upload__overlay');
 var fileInput = form.querySelector('.img-upload__input');
 var formCloseButton = form.querySelector('.img-upload__cancel');
-var effectRadioInputs = form.querySelectorAll('.effects__radio');
 
 var addEffectChangeListeners = function () {
-  for (var i = 0; i < effectRadioInputs.length; i++) {
-    var effectRadioInput = effectRadioInputs[i];
-    effectRadioInput.addEventListener('change', onEffectRadioInputChange);
-  }
+  body.addEventListener('change', onEffectRadioInputChange);
 };
 
 var removeEffectChangeListeners = function () {
-  for (var i = 0; i < effectRadioInputs.length; i++) {
-    var effectRadioInput = effectRadioInputs[i];
-    effectRadioInput.removeEventListener('change', onEffectRadioInputChange);
-  }
+  body.removeEventListener('change', onEffectRadioInputChange);
 };
 
 var showForm = function () {
@@ -298,8 +292,10 @@ var onScalePinMouseUp = function () {
   changeEffectLevel();
 };
 
-var onEffectRadioInputChange = function () {
-  changeEffect();
+var onEffectRadioInputChange = function (evt) {
+  if (evt.target.name === 'effect') {
+    changeEffect();
+  }
 };
 
 
