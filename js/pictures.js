@@ -23,6 +23,7 @@ var EFFECT_PARAMS = {
   heat: {filter: 'brightness', min: 1, max: 3, unit: null}
 };
 var SPIN_DEFAULT_VALUE = 100;
+var SPIN_MINIMUM_VALUE = 0;
 
 var body = document.querySelector('body');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
@@ -168,8 +169,7 @@ var showForm = function () {
   imageUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onFormEscPress);
   formCloseButton.addEventListener('click', onFormCloseButtonClick);
-  scalePin.addEventListener('mouseup', onScalePinMouseUp);
-
+  scalePin.addEventListener('mousedown', onPinDownClick);
   resizeIncreasingButton.addEventListener('click', onResizeIncreasingButton);
   resizeDecreasingButton.addEventListener('click', onResizeDecreasingButton);
 
@@ -183,9 +183,7 @@ var hideForm = function () {
 
   document.removeEventListener('keydown', onFormEscPress);
   formCloseButton.removeEventListener('click', onFormCloseButtonClick);
-
-  scalePin.removeEventListener('mouseup', onScalePinMouseUp);
-
+  scalePin.removeEventListener('mousedown', onPinDownClick);
   resizeIncreasingButton.removeEventListener('click', onResizeIncreasingButton);
   resizeDecreasingButton.removeEventListener('click', onResizeDecreasingButton);
 
@@ -213,6 +211,7 @@ var scale = form.querySelector('.scale');
 var scalePin = scale.querySelector('.scale__pin');
 var formImgElement = form.querySelector('.img-upload__preview img');
 var effectLevelInput = form.querySelector('.scale__value');
+var effectLevel = scale.querySelector('.scale__level');
 
 var getSpinPercent = function () {
   var percent = parseInt(scalePin.style.left, 10);
@@ -220,7 +219,6 @@ var getSpinPercent = function () {
 };
 
 var changeSpinPosition = function (percent) {
-  var effectLevel = scale.querySelector('.scale__level');
   if (!percent && percent !== 0) {
     percent = 100;
   }
@@ -288,9 +286,6 @@ var changeEffect = function () {
   applyFilter();
 };
 
-var onScalePinMouseUp = function () {
-  changeEffectLevel();
-};
 
 var onEffectRadioInputChange = function (evt) {
   if (evt.target.name === 'effect') {
@@ -411,6 +406,50 @@ var onFormSubmit = function (evt) {
     evt.preventDefault();
   }
 };
+
+// Перетаскивание
+
+var onPinDownClick = function (evt) {
+  evt.preventDefault();
+
+  var pinCoords = scalePin.getBoundingClientRect();
+  var scaleCoords = scale.getBoundingClientRect();
+  var xShift = evt.pageX - (pinCoords.left + pinCoords.width / 2);
+
+  var onMouseDragging = function (moveEvt) {
+    var newCoords = moveEvt.pageX - scaleCoords.left - xShift;
+    var maxCoords = scaleCoords.width;
+
+    if (newCoords < SPIN_MINIMUM_VALUE) {
+      newCoords = 0;
+    }
+
+    if (newCoords > maxCoords) {
+      newCoords = maxCoords;
+    }
+
+    effectLevelInput.value = Math.round(newCoords * 100 / scaleCoords.width);
+    scalePin.style.left = effectLevelInput.value + '%';
+    effectLevel.style.width = scalePin.style.left;
+    changeEffectLevel();
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    onMouseDragging(moveEvt);
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    onMouseDragging(upEvt);
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
 
 hashtagInput.addEventListener('input', onFormSubmit);
 form.addEventListener('submit', onFormSubmit);
