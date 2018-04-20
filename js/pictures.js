@@ -24,6 +24,7 @@ var EFFECT_PARAMS = {
 };
 var SPIN_DEFAULT_VALUE = 100;
 
+var body = document.querySelector('body');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 var pictureElement = document.querySelector('.pictures');
 var form = document.querySelector('.img-upload__form');
@@ -154,20 +155,13 @@ var renderBigPhoto = function (photo) {
 var imageUploadOverlay = form.querySelector('.img-upload__overlay');
 var fileInput = form.querySelector('.img-upload__input');
 var formCloseButton = form.querySelector('.img-upload__cancel');
-var effectRadioInputs = form.querySelectorAll('.effects__radio');
 
 var addEffectChangeListeners = function () {
-  for (var i = 0; i < effectRadioInputs.length; i++) {
-    var effectRadioInput = effectRadioInputs[i];
-    effectRadioInput.addEventListener('change', onEffectRadioInputChange);
-  }
+  body.addEventListener('change', onEffectRadioInputChange);
 };
 
 var removeEffectChangeListeners = function () {
-  for (var i = 0; i < effectRadioInputs.length; i++) {
-    var effectRadioInput = effectRadioInputs[i];
-    effectRadioInput.removeEventListener('change', onEffectRadioInputChange);
-  }
+  body.removeEventListener('change', onEffectRadioInputChange);
 };
 
 var showForm = function () {
@@ -298,8 +292,10 @@ var onScalePinMouseUp = function () {
   changeEffectLevel();
 };
 
-var onEffectRadioInputChange = function () {
-  changeEffect();
+var onEffectRadioInputChange = function (evt) {
+  if (evt.target.name === 'effect') {
+    changeEffect();
+  }
 };
 
 
@@ -341,6 +337,82 @@ var onResizeIncreasingButton = function () {
   increasePhotoSize();
 };
 
+// Валидация формы
 
+var hashTagForm = form.querySelector('.img-upload__text');
+var hashtagInput = form.querySelector('.text__hashtags');
+
+hashTagForm.addEventListener('keydown', function (evt) {
+  if (evt.keydown === ESC) {
+    evt.stopPropagation();
+  }
+});
+
+var validateSpaceBetween = function (hashtag) {
+  return !((hashtag.match(/#/g) || []).length > 1);
+};
+
+var hashtagInputRequirements = {
+  startsWithHash: 'Хэш-теги должны начинаться с символа # (решётка)',
+  minimumTwoSymbols: 'Хеш-тег не может состоять только из одной решётки',
+  spaceBetween: 'Хэш-теги должны разделяться пробелами',
+  noRepeat: 'Один и тот же хэш-тег не может быть использован дважды',
+  maximumAmmount: 'Нельзя указать больше пяти хэш-тегов',
+  maxLength: 'Максимальная длина одного хэш-тега 20 символов, включая знак #'
+};
+
+var validateUniqueness = function (array) {
+  var presentElements = {};
+
+  for (var i = 0; i < array.length; i++) {
+    var item = array[i];
+    if (presentElements[item]) {
+      return false;
+    }
+    presentElements[item] = true;
+  }
+
+  return true;
+};
+
+var validateHashTags = function () {
+  var hashtagArray = hashtagInput.value.trim().toLowerCase().split(' ');
+
+  hashtagInput.setCustomValidity('');
+
+  if (hashtagArray.length > 5) {
+    hashtagInput.setCustomValidity(hashtagInputRequirements.maximumAmmount);
+  } else if (!validateUniqueness(hashtagArray)) {
+    hashtagInput.setCustomValidity(hashtagInputRequirements.noRepeat);
+  } else {
+    for (var i = 0; i < hashtagArray.length; i++) {
+      var hashtag = hashtagArray[i];
+      if (hashtag.charAt(0) !== '#') {
+        hashtagInput.setCustomValidity(hashtagInputRequirements.startsWithHash);
+      } else if (hashtag === '#') {
+        hashtagInput.setCustomValidity(hashtagInputRequirements.minimumTwoSymbols);
+      } else if (!validateSpaceBetween(hashtag)) {
+        hashtagInput.setCustomValidity(hashtagInputRequirements.spaceBetween);
+      } else if (hashtag.length > 20) {
+        hashtagInput.setCustomValidity(hashtagInputRequirements.maxLength);
+      }
+    }
+  }
+  return true;
+};
+
+var validateForm = function () {
+  return validateHashTags();
+};
+
+var onFormSubmit = function (evt) {
+  var formValid = validateForm();
+  if (!formValid) {
+    evt.preventDefault();
+  }
+};
+
+hashtagInput.addEventListener('input', onFormSubmit);
+form.addEventListener('submit', onFormSubmit);
 fileInput.addEventListener('change', onFileInputChange);
 renderAllPhotos(allPhotos);
