@@ -2,25 +2,25 @@
 
 (function () {
 
-  var EFFECT_PARAMS = {
-    chrome: {filter: 'grayscale', min: 0, max: 1, unit: null},
-    sepia: {filter: 'sepia', min: 0, max: 1, unit: null},
-    marvin: {filter: 'invert', min: 0, max: 100, unit: '%'},
-    phobos: {filter: 'blur', min: 0, max: 3, unit: 'px'},
-    heat: {filter: 'brightness', min: 1, max: 3, unit: null}
-  };
   var RESIZE_STEP = 25;
   var RESIZE_MIN_VALUE = 25;
   var RESIZE_MAX_VALUE = 100;
-  var SPIN_DEFAULT_VALUE = 100;
   var SPIN_MINIMUM_VALUE = 0;
 
   var exports = {};
-
+  var body = document.querySelector('body');
   var form = document.querySelector('.img-upload__form');
   exports.form = form;
-
-  var body = document.querySelector('body');
+  var scale = form.querySelector('.scale');
+  exports.scale = scale;
+  var scalePin = scale.querySelector('.scale__pin');
+  exports.scalePin = scalePin;
+  var formImgElement = form.querySelector('.img-upload__preview img');
+  exports.formImgElement = formImgElement;
+  var effectLevelInput = form.querySelector('.scale__value');
+  exports.effectLevelInput = effectLevelInput;
+  var effectLevel = scale.querySelector('.scale__level');
+  exports.effectLevel = effectLevel;
   // UPLOAD
 
   var imageUploadOverlay = form.querySelector('.img-upload__overlay');
@@ -28,11 +28,11 @@
   var formCloseButton = form.querySelector('.img-upload__cancel');
 
   var addEffectChangeListeners = function () {
-    body.addEventListener('change', onEffectRadioInputChange);
+    body.addEventListener('change', window.filter.onEffectRadioInputChange);
   };
 
   var removeEffectChangeListeners = function () {
-    body.removeEventListener('change', onEffectRadioInputChange);
+    body.removeEventListener('change', window.filter.onEffectRadioInputChange);
   };
 
   var showForm = function () {
@@ -44,7 +44,7 @@
     resizeDecreasingButton.addEventListener('click', onResizeDecreasingButton);
 
     addEffectChangeListeners();
-    hideScale();
+    window.filter.hideScale();
   };
 
   var hideForm = function () {
@@ -58,7 +58,7 @@
     resizeDecreasingButton.removeEventListener('click', onResizeDecreasingButton);
 
     removeEffectChangeListeners();
-    resetFilters();
+    window.filter.resetFilters();
   };
 
   var onFileInputChange = function () {
@@ -74,95 +74,6 @@
       hideForm();
     }
   };
-
-  // Фильтры//
-
-  var scale = form.querySelector('.scale');
-  var scalePin = scale.querySelector('.scale__pin');
-  var formImgElement = form.querySelector('.img-upload__preview img');
-  var effectLevelInput = form.querySelector('.scale__value');
-  var effectLevel = scale.querySelector('.scale__level');
-
-  var getSpinPercent = function () {
-    var percent = parseInt(scalePin.style.left, 10);
-    return percent;
-  };
-
-  var changeSpinPosition = function (percent) {
-    if (!percent && percent !== 0) {
-      percent = 100;
-    }
-
-    scalePin.style.left = percent + '%';
-    effectLevel.style.width = percent + '%';
-  };
-
-  var hideScale = function () {
-    scale.classList.add('hidden');
-  };
-
-  var showScale = function () {
-    scale.classList.remove('hidden');
-  };
-
-  var applyFilter = function () {
-    var percent = effectLevelInput.value;
-    var effectName = form.querySelector('.effects__radio:checked').value;
-    if (effectName === 'none') {
-      hideScale();
-    } else {
-      showScale();
-    }
-    applyFilterCss(effectName, percent);
-  };
-
-  var applyFilterCss = function (effect, percent) {
-    var cssClass = 'effects__preview--' + effect;
-    formImgElement.className = '';
-    formImgElement.classList.add(cssClass);
-    var filterValue = calcFilterValue(effect, percent);
-    formImgElement.style.webkitFilter = filterValue;
-    formImgElement.style.filter = filterValue;
-  };
-
-  var resetFilters = function () {
-    form.querySelector('.effects__radio:checked').checked = false;
-    formImgElement.className = '';
-  };
-
-  var calcFilterValue = function (effect, percent) {
-    if (effect === 'none') {
-      return '';
-    }
-
-    var effectParams = EFFECT_PARAMS[effect];
-    var filterName = effectParams.filter;
-    var unit = effectParams.unit || '';
-    var range = effectParams.max - effectParams.min;
-
-    var filterNumberValue = range * (percent / 100) + effectParams.min;
-    var filterValue = filterName + '(' + filterNumberValue + unit + ')';
-    return filterValue;
-  };
-
-  var changeEffectLevel = function () {
-    effectLevelInput.value = getSpinPercent();
-    applyFilter();
-  };
-
-  var changeEffect = function () {
-    changeSpinPosition(SPIN_DEFAULT_VALUE);
-    effectLevelInput.value = SPIN_DEFAULT_VALUE;
-    applyFilter();
-  };
-
-
-  var onEffectRadioInputChange = function (evt) {
-    if (evt.target.name === 'effect') {
-      changeEffect();
-    }
-  };
-
 
   // РЕСАЙЗ
 
@@ -226,7 +137,7 @@
       effectLevelInput.value = Math.round(newCoords * 100 / scaleCoords.width);
       scalePin.style.left = effectLevelInput.value + '%';
       effectLevel.style.width = scalePin.style.left;
-      changeEffectLevel();
+      window.filter.changeEffectLevel();
     };
 
     var onMouseMove = function (moveEvt) {
