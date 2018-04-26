@@ -9,9 +9,12 @@
   var getData = function (onLoad, onError) {
 
     var onXhrLoad = function () {
+      var messageErrorElement = document.querySelector('.message_error');
       if (xhr.status === 200) {
+        messageErrorElement.classList.add('hidden');
         onLoad(xhr.response);
       } else {
+        messageErrorElement.classList.remove('hidden');
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     };
@@ -36,6 +39,7 @@
     getData(onLoad, onError);
     xhr.open('GET', URL_GET);
     xhr.send();
+    // console.log(loadData);
   };
 
   var postData = function (data, onLoad, onError) {
