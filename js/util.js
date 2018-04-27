@@ -3,9 +3,19 @@
 (function () {
   var DEFAULT_RAMDOM_MIN = 1;
   var DEFAULT_RAMDOM_MAX = 100;
+  var messageErrorElement = document.querySelector('.message_error');
 
   var util = {
     ESC: 27
+  };
+
+  util.showError = function (message) {
+    messageErrorElement.classList.remove('hidden');
+    messageErrorElement.textContent = message;
+  };
+
+  util.hideError = function () {
+    messageErrorElement.classList.add('hidden');
   };
 
   util.getRandomInteger = function (max, min) {

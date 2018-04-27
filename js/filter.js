@@ -28,6 +28,7 @@
   var hideScale = function () {
     window.uploadForm.scale.classList.add('hidden');
   };
+  exports.hideScale = hideScale;
 
   var showScale = function () {
     window.uploadForm.scale.classList.remove('hidden');
@@ -53,10 +54,11 @@
     window.uploadForm.formImgElement.style.filter = filterValue;
   };
 
-  exports.resetFilters = function () {
+  var resetFilters = function () {
     window.uploadForm.form.querySelector('.effects__radio:checked').checked = false;
     window.uploadForm.formImgElement.className = '';
   };
+  exports.resetFilters = resetFilters;
 
   var calcFilterValue = function (effect, percent) {
     if (effect === 'none') {

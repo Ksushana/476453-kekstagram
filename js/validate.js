@@ -2,6 +2,8 @@
 
 (function () {
 
+  var exports = {};
+
   var hashTagForm = window.uploadForm.form.querySelector('.img-upload__text');
   var hashtagInput = window.uploadForm.form.querySelector('.text__hashtags');
 
@@ -39,43 +41,47 @@
   };
 
   var validateHashTags = function () {
-    var hashtagArray = hashtagInput.value.trim().toLowerCase().split(' ');
-
     hashtagInput.setCustomValidity('');
 
+    var value = hashtagInput.value.trim().toLowerCase();
+    if (!value || value === '') {
+      return true;
+    }
+
+    var hashtagArray = value.split(' ');
     if (hashtagArray.length > 5) {
       hashtagInput.setCustomValidity(hashtagInputRequirements.maximumAmmount);
+      return false;
     } else if (!validateUniqueness(hashtagArray)) {
       hashtagInput.setCustomValidity(hashtagInputRequirements.noRepeat);
+      return false;
     } else {
       for (var i = 0; i < hashtagArray.length; i++) {
         var hashtag = hashtagArray[i];
         if (hashtag.charAt(0) !== '#') {
           hashtagInput.setCustomValidity(hashtagInputRequirements.startsWithHash);
+          return false;
         } else if (hashtag === '#') {
           hashtagInput.setCustomValidity(hashtagInputRequirements.minimumTwoSymbols);
+          return false;
         } else if (!validateSpaceBetween(hashtag)) {
           hashtagInput.setCustomValidity(hashtagInputRequirements.spaceBetween);
+          return false;
         } else if (hashtag.length > 20) {
           hashtagInput.setCustomValidity(hashtagInputRequirements.maxLength);
+          return false;
         }
       }
     }
+
     return true;
   };
 
   var validateForm = function () {
     return validateHashTags();
   };
+  exports.validateForm = validateForm;
 
-  var onFormSubmit = function (evt) {
-    var formValid = validateForm();
-    if (!formValid) {
-      evt.preventDefault();
-    }
-  };
-
-  hashtagInput.addEventListener('input', onFormSubmit);
-  window.uploadForm.form.addEventListener('submit', onFormSubmit);
+  window.validations = exports;
 
 })();

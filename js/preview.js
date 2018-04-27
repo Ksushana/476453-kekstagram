@@ -50,10 +50,12 @@
 
   var renderBigPhoto = function (photo) {
     var avatarNumber = window.util.getRandomInteger(SOCIAL_PICTURE_SRC_MAX, SOCIAL_PICTURE_SRC_MIN);
+    var description = photo.comments.shift();
     showBigPhoto();
     bigPhoto.querySelector('.big-picture__img img').src = photo.url;
     bigPhoto.querySelector('.likes-count').textContent = photo.likes;
     bigPhoto.querySelector('.social__picture').src = 'img/avatar-' + avatarNumber + '.svg';
+    bigPhoto.querySelector('.social__caption').textContent = description;
     bigPhoto.querySelector('.comments-count').textContent = photo.comments.length;
     renderComments(photo.comments);
     commentsCount.classList.add('visually-hidden');

@@ -158,5 +158,32 @@
 
   fileInput.addEventListener('change', onFileInputChange);
 
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    var formValid = window.validations.validateForm();
+    if (formValid) {
+      submitForm();
+    }
+  };
+
+  var resetForm = function () {
+    form.reset();
+    window.filter.resetFilters();
+  };
+
+  var submitForm = function () {
+    var formData = new FormData(form);
+    window.util.hideError();
+    window.backend.createPicture(formData, function () {
+      hideForm();
+      resetForm();
+    }, function (error) {
+      window.util.showError(error);
+    });
+  };
+
+  // hashtagInput.addEventListener('input', onFormSubmit);
+  form.addEventListener('submit', onFormSubmit);
+
   window.uploadForm = exports;
 })();
