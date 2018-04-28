@@ -6,7 +6,6 @@
   var SOCIAL_PICTURE_SRC_MAX = 6;
 
   // BIG PHOTO//
-  var exports = {};
 
   var bigPhoto = document.querySelector('.big-picture');
   var bigPhotoCloseButton = bigPhoto.querySelector('.big-picture__cancel');
@@ -63,6 +62,7 @@
     bigPhotoCloseButton.addEventListener('click', onBigPhotoCloseButtonClick);
   };
 
-  exports.renderBigPhoto = renderBigPhoto;
-  window.preview = exports;
+  window.preview = {
+    renderBigPhoto: renderBigPhoto
+  };
 })();

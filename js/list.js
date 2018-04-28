@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var URL_GET = 'https://js.dump.academy/kekstagram/data';
 
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var pictureElement = document.querySelector('.pictures');
@@ -28,7 +29,7 @@
     pictureElement.appendChild(fragment);
   };
 
-  window.backend.loadPictures(function (allPhotos) {
+  window.backend.getAll(URL_GET, function (allPhotos) {
     renderAllPhotos(allPhotos);
   }, function (error) {
     window.util.showError(error);
