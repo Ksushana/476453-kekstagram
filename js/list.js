@@ -29,8 +29,10 @@
     pictureElement.appendChild(fragment);
   };
 
-  window.backend.getAll(URL_GET, function (allPhotos) {
+  window.backend.request(URL_GET, 'GET', null, function (allPhotos) {
     renderAllPhotos(allPhotos);
+    var filterElement = document.querySelector('.img-filters');
+    filterElement.classList.remove('img-filters--inactive');
   }, function (error) {
     window.util.showError(error);
   });

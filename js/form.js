@@ -167,7 +167,7 @@
   var submitForm = function () {
     var formData = new FormData(form);
     window.util.hideError();
-    window.backend.create(URL_POST, formData, function () {
+    window.backend.request(URL_POST, 'POST', formData, function () {
       hideForm();
       resetForm();
     }, function (error) {

@@ -29,17 +29,8 @@
     xhr.send(data);
   };
 
-  var getAll = function (url, onLoad, onError) {
-    request(url, 'GET', null, onLoad, onError);
-  };
-
-  var create = function (url, data, onLoad, onError) {
-    request(url, 'POST', data, onLoad, onError);
-  };
-
   window.backend = {
-    getAll: getAll,
-    create: create
+    request: request
   };
 
 })();
