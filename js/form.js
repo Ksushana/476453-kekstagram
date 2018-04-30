@@ -1,26 +1,20 @@
 'use strict';
 
 (function () {
+  var URL_POST = 'https://js.dump.academy/kekstagram';
 
   var RESIZE_STEP = 25;
   var RESIZE_MIN_VALUE = 25;
   var RESIZE_MAX_VALUE = 100;
   var SPIN_MINIMUM_VALUE = 0;
 
-  var exports = {};
   var body = document.querySelector('body');
   var form = document.querySelector('.img-upload__form');
-  exports.form = form;
   var scale = form.querySelector('.scale');
-  exports.scale = scale;
   var scalePin = scale.querySelector('.scale__pin');
-  exports.scalePin = scalePin;
   var formImgElement = form.querySelector('.img-upload__preview img');
-  exports.formImgElement = formImgElement;
   var effectLevelInput = form.querySelector('.scale__value');
-  exports.effectLevelInput = effectLevelInput;
   var effectLevel = scale.querySelector('.scale__level');
-  exports.effectLevel = effectLevel;
   // UPLOAD
 
   var imageUploadOverlay = form.querySelector('.img-upload__overlay');
@@ -158,5 +152,38 @@
 
   fileInput.addEventListener('change', onFileInputChange);
 
-  window.uploadForm = exports;
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    if (window.validations.validateForm()) {
+      submitForm();
+    }
+  };
+
+  var resetForm = function () {
+    form.reset();
+    window.filter.resetFilters();
+  };
+
+  var submitForm = function () {
+    var formData = new FormData(form);
+    window.util.hideError();
+    window.backend.request(URL_POST, 'POST', formData, function () {
+      hideForm();
+      resetForm();
+    }, function (error) {
+      window.util.showError(error);
+    });
+  };
+
+  // hashtagInput.addEventListener('input', onFormSubmit);
+  form.addEventListener('submit', onFormSubmit);
+
+  window.uploadForm = {
+    form: form,
+    scale: scale,
+    scalePin: scalePin,
+    formImgElement: formImgElement,
+    effectLevelInput: effectLevelInput,
+    effectLevel: effectLevel
+  };
 })();

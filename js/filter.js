@@ -10,8 +10,6 @@
   };
   var SPIN_DEFAULT_VALUE = 100;
 
-  var exports = {};
-
   var getSpinPercent = function () {
     var percent = parseInt(window.uploadForm.scalePin.style.left, 10);
     return percent;
@@ -53,7 +51,7 @@
     window.uploadForm.formImgElement.style.filter = filterValue;
   };
 
-  exports.resetFilters = function () {
+  var resetFilters = function () {
     window.uploadForm.form.querySelector('.effects__radio:checked').checked = false;
     window.uploadForm.formImgElement.className = '';
   };
@@ -73,7 +71,7 @@
     return filterValue;
   };
 
-  exports.changeEffectLevel = function () {
+  var changeEffectLevel = function () {
     window.uploadForm.effectLevelInput.value = getSpinPercent();
     applyFilter();
   };
@@ -84,12 +82,17 @@
     applyFilter();
   };
 
-  exports.onEffectRadioInputChange = function (evt) {
+  var onEffectRadioInputChange = function (evt) {
     if (evt.target.name === 'effect') {
       changeEffect();
     }
   };
 
-  window.filter = exports;
+  window.filter = {
+    hideScale: hideScale,
+    resetFilters: resetFilters,
+    changeEffectLevel: changeEffectLevel,
+    onEffectRadioInputChange: onEffectRadioInputChange
+  };
 
 })();

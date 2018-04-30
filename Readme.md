@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ксения Балашова](https://up.htmlacademy.ru/javascript/13/user/476453).
-* Наставник: `Юлька Долгун`.
+* Наставник: `Никита Пиковец`.
 
 ---
 
