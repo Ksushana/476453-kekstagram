@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 100;
   var imageFilterButtons = document.querySelectorAll('.img-filters__button');
 
   var clearFilterButtonsClasses = function () {
@@ -17,48 +16,32 @@
     });
   };
 
-  var sortRecommendedPhotos = function (photos) {
-    return photos;
-  };
-
-  var sortPopularPhotos = function (photos) {
-    return photos.slice().sort(function (first, second) {
-      return second.likes - first.likes;
-    });
-  };
-
-  var sortDiscussedPhotos = function (photos) {
-    return photos.slice().sort(function (first, second) {
-      return second.comments.length - first.comments.length;
-    });
-  };
-
-  var sortRandomPhotos = function (photos) {
-    return photos.slice().sort(function () {
-      return Math.random() - 0.5;
-    });
-  };
-
   var sortFunctions = {
-    recommended: sortRecommendedPhotos,
-    popular: sortPopularPhotos,
-    discussed: sortDiscussedPhotos,
-    random: sortRandomPhotos
+    popular: function (a, b) {
+      return b.likes - a.likes;
+    },
+    discussed: function (a, b) {
+      return b.comments.length - a.comments.length;
+    },
+    random: function () {
+      return Math.random() - 0.5;
+    }
   };
 
-  var debounce = function (callback) {
-    var lastTimeout;
-    if (lastTimeout) {
-      clearTimeout(lastTimeout);
-      lastTimeout = null;
+  var sortPhotosArray = function (photos, sortType) {
+    photos = photos.slice();
+    var sortFunction = sortFunctions[sortType];
+    if (!sortFunction) {
+      return photos;
     }
-    lastTimeout = setTimeout(callback, DEBOUNCE_INTERVAL);
+
+    var sortedPhotos = photos.sort(sortFunction);
+    return sortedPhotos;
   };
 
   var sortPhotos = function (sortType) {
     clearPhotoList();
-    var sortFunction = sortFunctions[sortType];
-    var photos = sortFunction(window.list.photos);
+    var photos = sortPhotosArray(window.list.photos, sortType);
     window.list.renderAllPhotos(photos);
   };
 
@@ -73,7 +56,7 @@
   };
 
   var onSortButtonClick = function (evt) {
-    debounce(function () {
+    window.util.debounce(function () {
       var button = evt.target;
       setCurrentSortButton(button);
       var sortType = getSortTypeByButton(button);
