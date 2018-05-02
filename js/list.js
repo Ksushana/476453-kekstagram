@@ -29,12 +29,22 @@
     pictureElement.appendChild(fragment);
   };
 
-  window.backend.request(URL_GET, 'GET', null, function (allPhotos) {
-    renderAllPhotos(allPhotos);
+  var showFilterElement = function () {
     var filterElement = document.querySelector('.img-filters');
     filterElement.classList.remove('img-filters--inactive');
+  };
+
+  window.backend.request(URL_GET, 'GET', null, function (allPhotos) {
+    window.list.photos = allPhotos;
+    renderAllPhotos(allPhotos);
+    showFilterElement();
   }, function (error) {
     window.util.showError(error);
   });
+
+  window.list = {
+    renderAllPhotos: renderAllPhotos,
+    pictureTemplate: pictureTemplate
+  };
 
 })();
