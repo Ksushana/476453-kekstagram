@@ -64,7 +64,11 @@
     });
   };
 
-  imageFilterButtons.forEach(function (button) {
-    button.addEventListener('click', onSortButtonClick);
-  });
+  var addSortButtonHandlers = function () {
+    imageFilterButtons.forEach(function (button) {
+      button.addEventListener('click', onSortButtonClick);
+    });
+  };
+
+  addSortButtonHandlers();
 })();

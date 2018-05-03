@@ -1,9 +1,28 @@
 'use strict';
 
 (function () {
-  var DEFAULT_RAMDOM_MIN = 1;
-  var DEFAULT_RAMDOM_MAX = 100;
-  var DEBOUNCE_INTERVAL = 200;
+  var constants = {
+    DEFAULT_RAMDOM_MIN: 1,
+    DEFAULT_RAMDOM_MAX: 100,
+    DEBOUNCE_INTERVAL: 200,
+    URL_GET: 'https://js.dump.academy/kekstagram/data',
+    URL_POST: 'https://js.dump.academy/kekstagram',
+    ESC: 27,
+    RESIZE_STEP: 25,
+    RESIZE_MIN_VALUE: 25,
+    RESIZE_MAX_VALUE: 100,
+    SPIN_MINIMUM_VALUE: 0,
+    EFFECT_PARAMS: {
+      chrome: {filter: 'grayscale', min: 0, max: 1, unit: null},
+      sepia: {filter: 'sepia', min: 0, max: 1, unit: null},
+      marvin: {filter: 'invert', min: 0, max: 100, unit: '%'},
+      phobos: {filter: 'blur', min: 0, max: 3, unit: 'px'},
+      heat: {filter: 'brightness', min: 1, max: 3, unit: null}
+    },
+    SPIN_DEFAULT_VALUE: 100,
+    TIMEOUT: 10000,
+  };
+
   var messageErrorElement = document.querySelector('.message_error');
   var debounceTimeout;
 
@@ -17,8 +36,8 @@
   };
 
   var getRandomInteger = function (max, min) {
-    min = min || DEFAULT_RAMDOM_MIN;
-    max = max || DEFAULT_RAMDOM_MAX;
+    min = min || constants.DEFAULT_RAMDOM_MIN;
+    max = max || constants.DEFAULT_RAMDOM_MAX;
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
@@ -40,12 +59,12 @@
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
       debounceTimeout = null;
-      debounceTimeout = setTimeout(callback, DEBOUNCE_INTERVAL);
+      debounceTimeout = setTimeout(callback, constants.DEBOUNCE_INTERVAL);
     } else {
       callback();
       debounceTimeout = setTimeout(function () {
         debounceTimeout = null;
-      }, DEBOUNCE_INTERVAL);
+      }, constants.DEBOUNCE_INTERVAL);
     }
   };
 
@@ -55,6 +74,6 @@
     getRandomInteger: getRandomInteger,
     validateUniqueness: validateUniqueness,
     debounce: debounce,
-    ESC: 27
+    constants: constants
   };
 })();
