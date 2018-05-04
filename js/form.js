@@ -1,12 +1,6 @@
 'use strict';
 
 (function () {
-  var URL_POST = 'https://js.dump.academy/kekstagram';
-
-  var RESIZE_STEP = 25;
-  var RESIZE_MIN_VALUE = 25;
-  var RESIZE_MAX_VALUE = 100;
-  var SPIN_MINIMUM_VALUE = 0;
 
   var body = document.querySelector('body');
   var form = document.querySelector('.img-upload__form');
@@ -83,8 +77,8 @@
 
   var increasePhotoSize = function () {
     var currentSize = parseInt(photoSizeInput.value, 10);
-    var newSize = currentSize + RESIZE_STEP;
-    if (newSize > RESIZE_MAX_VALUE) {
+    var newSize = currentSize + window.util.constants.RESIZE_STEP;
+    if (newSize > window.util.constants.RESIZE_MAX_VALUE) {
       return;
     }
     changePhotoSize(newSize);
@@ -92,8 +86,8 @@
 
   var decreasePhotoSize = function () {
     var currentSize = parseInt(photoSizeInput.value, 10);
-    var newSize = currentSize - RESIZE_STEP;
-    if (newSize < RESIZE_MIN_VALUE) {
+    var newSize = currentSize - window.util.constants.RESIZE_STEP;
+    if (newSize < window.util.constants.RESIZE_MIN_VALUE) {
       return;
     }
     changePhotoSize(newSize);
@@ -120,7 +114,7 @@
       var newCoords = moveEvt.pageX - scaleCoords.left - xShift;
       var maxCoords = scaleCoords.width;
 
-      if (newCoords < SPIN_MINIMUM_VALUE) {
+      if (newCoords < window.util.constants.SPIN_MINIMUM_VALUE) {
         newCoords = 0;
       }
 
@@ -167,7 +161,7 @@
   var submitForm = function () {
     var formData = new FormData(form);
     window.util.hideError();
-    window.backend.request(URL_POST, 'POST', formData, function () {
+    window.backend.request(window.util.constants.URL_POST, 'POST', formData, function () {
       hideForm();
       resetForm();
     }, function (error) {

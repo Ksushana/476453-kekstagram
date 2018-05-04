@@ -1,14 +1,6 @@
 'use strict';
 
 (function () {
-  var EFFECT_PARAMS = {
-    chrome: {filter: 'grayscale', min: 0, max: 1, unit: null},
-    sepia: {filter: 'sepia', min: 0, max: 1, unit: null},
-    marvin: {filter: 'invert', min: 0, max: 100, unit: '%'},
-    phobos: {filter: 'blur', min: 0, max: 3, unit: 'px'},
-    heat: {filter: 'brightness', min: 1, max: 3, unit: null}
-  };
-  var SPIN_DEFAULT_VALUE = 100;
 
   var getSpinPercent = function () {
     var percent = parseInt(window.uploadForm.scalePin.style.left, 10);
@@ -61,7 +53,7 @@
       return '';
     }
 
-    var effectParams = EFFECT_PARAMS[effect];
+    var effectParams = window.util.constants.EFFECT_PARAMS[effect];
     var filterName = effectParams.filter;
     var unit = effectParams.unit || '';
     var range = effectParams.max - effectParams.min;
@@ -77,8 +69,8 @@
   };
 
   var changeEffect = function () {
-    changeSpinPosition(SPIN_DEFAULT_VALUE);
-    window.uploadForm.effectLevelInput.value = SPIN_DEFAULT_VALUE;
+    changeSpinPosition(window.util.constants.SPIN_DEFAULT_VALUE);
+    window.uploadForm.effectLevelInput.value = window.util.constants.SPIN_DEFAULT_VALUE;
     applyFilter();
   };
 

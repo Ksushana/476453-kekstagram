@@ -1,13 +1,12 @@
 'use strict';
 
 (function () {
-  var TIMEOUT = 10000;
 
   var request = function (url, method, data, onLoad, onError) {
 
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
-    xhr.timeout = TIMEOUT;
+    xhr.timeout = window.util.constants.TIMEOUT;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
