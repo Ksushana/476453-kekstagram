@@ -51,6 +51,7 @@
 
   var onFileInputChange = function () {
     showForm();
+    window.upload.updateImage();
   };
 
   var onFormCloseButtonClick = function () {
@@ -178,6 +179,7 @@
     scalePin: scalePin,
     formImgElement: formImgElement,
     effectLevelInput: effectLevelInput,
-    effectLevel: effectLevel
+    effectLevel: effectLevel,
+    fileInput: fileInput
   };
 })();
