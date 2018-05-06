@@ -2,10 +2,10 @@
 
 (function () {
 
-  var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
+  var pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture__link');
 
   var renderOnePhoto = function (photo) {
-    var photoElement = pictureTemplate.cloneNode(true);
+    var photoElement = pictureTemplateElement.cloneNode(true);
     photoElement.querySelector('.picture__img').src = photo.url;
     photoElement.querySelector('.picture__stat--likes').textContent = photo.likes;
     photoElement.querySelector('.picture__stat--comments').textContent = photo.comments.length;
@@ -47,7 +47,7 @@
 
   window.list = {
     renderAllPhotos: renderAllPhotos,
-    pictureTemplate: pictureTemplate
+    pictureTemplate: pictureTemplateElement
   };
 
 })();

@@ -25,13 +25,13 @@
 
   var applyFilter = function () {
     var percent = window.uploadForm.effectLevelInput.value;
-    var effectName = window.uploadForm.form.querySelector('.effects__radio:checked').value;
-    if (effectName === 'none') {
+    var effectNameElement = window.uploadForm.form.querySelector('.effects__radio:checked').value;
+    if (effectNameElement === 'none') {
       hideScale();
     } else {
       showScale();
     }
-    applyFilterCss(effectName, percent);
+    applyFilterCss(effectNameElement, percent);
   };
 
   var applyFilterCss = function (effect, percent) {
@@ -44,14 +44,14 @@
   };
 
   var resetFilters = function () {
-    var checkedEffectRadio = window.uploadForm.form.querySelector('.effects__radio:checked');
-    var defaultEffectValue = window.uploadForm.form.querySelector('.effects__default');
-    if (checkedEffectRadio) {
-      checkedEffectRadio.checked = false;
+    var checkedEffectRadioElement = window.uploadForm.form.querySelector('.effects__radio:checked');
+    var defaultEffectValueElement = window.uploadForm.form.querySelector('.effects__default');
+    if (checkedEffectRadioElement) {
+      checkedEffectRadioElement.checked = false;
     }
     window.uploadForm.formImgElement.className = '';
     window.uploadForm.formImgElement.style.filter = '';
-    defaultEffectValue.checked = true;
+    defaultEffectValueElement.checked = true;
   };
 
   var calcFilterValue = function (effect, percent) {

@@ -2,12 +2,12 @@
 
 (function () {
 
-  var hashTagForm = window.uploadForm.form.querySelector('.img-upload__text');
-  var hashtagInput = window.uploadForm.form.querySelector('.text__hashtags');
+  var hashTagFormElement = window.uploadForm.form.querySelector('.img-upload__text');
+  var hashtagInputElement = window.uploadForm.form.querySelector('.text__hashtags');
   var buttonSubmitElement = window.uploadForm.form.querySelector('.img-upload__submit');
 
-  hashTagForm.addEventListener('keydown', function (evt) {
-    if (evt.keydown === window.util.ESC) {
+  hashTagFormElement.addEventListener('keydown', function (evt) {
+    if (evt.keydown === window.util.constants.ESC) {
       evt.stopPropagation();
     }
   });
@@ -17,17 +17,17 @@
   };
 
   var setErrorMessageToHashTags = function (message) {
-    hashtagInput.setCustomValidity(message);
-    hashtagInput.style.border = '2px solid red';
+    hashtagInputElement.setCustomValidity(message);
+    hashtagInputElement.style.border = '2px solid red';
   };
 
   var setCorrectMessageToHashTags = function () {
-    hashtagInput.setCustomValidity('');
-    hashtagInput.style.border = 'none';
+    hashtagInputElement.setCustomValidity('');
+    hashtagInputElement.style.border = 'none';
   };
 
   var validateHashTags = function () {
-    var value = hashtagInput.value.trim().toLowerCase();
+    var value = hashtagInputElement.value.trim().toLowerCase();
     if (!value || value === '') {
       return true;
     }
@@ -62,7 +62,11 @@
     }
   };
 
-  hashtagInput.addEventListener('input', validateHashTags);
+  var onHashtagInput = function () {
+    validateHashTags();
+  };
+
+  hashtagInputElement.addEventListener('input', onHashtagInput);
 
   buttonSubmitElement.addEventListener('click', function () {
     setCorrectMessageToHashTags();

@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
-  var imageFilterButtons = document.querySelectorAll('.img-filters__button');
+  var imageFilterButtonElements = document.querySelectorAll('.img-filters__button');
 
   var clearFilterButtonsClasses = function () {
-    imageFilterButtons.forEach(function (button) {
+    imageFilterButtonElements.forEach(function (button) {
       button.classList.remove('img-filters__button--active');
     });
   };
 
   var clearPhotoList = function () {
-    var pictureLinks = document.querySelectorAll('.picture__link');
-    pictureLinks.forEach(function (photo) {
+    var pictureLinkElements = document.querySelectorAll('.picture__link');
+    pictureLinkElements.forEach(function (photo) {
       photo.remove();
     });
   };
@@ -65,7 +65,7 @@
   };
 
   var addSortButtonHandlers = function () {
-    imageFilterButtons.forEach(function (button) {
+    imageFilterButtonElements.forEach(function (button) {
       button.addEventListener('click', onSortButtonClick);
     });
   };
