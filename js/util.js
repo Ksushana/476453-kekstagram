@@ -21,6 +21,16 @@
     },
     SPIN_DEFAULT_VALUE: 100,
     TIMEOUT: 10000,
+    SUCCESS_STATUS: 200
+  };
+
+  var hashtagInputRequirements = {
+    startsWithHash: 'Хэш-теги должны начинаться с символа # (решётка)',
+    minimumTwoSymbols: 'Хеш-тег не может состоять только из одной решётки',
+    spaceBetween: 'Хэш-теги должны разделяться пробелами',
+    noRepeat: 'Один и тот же хэш-тег не может быть использован дважды',
+    maximumAmmount: 'Нельзя указать больше пяти хэш-тегов',
+    maxLength: 'Максимальная длина одного хэш-тега 20 символов, включая знак #'
   };
 
   var messageErrorElement = document.querySelector('.message_error');
@@ -74,6 +84,7 @@
     getRandomInteger: getRandomInteger,
     validateUniqueness: validateUniqueness,
     debounce: debounce,
-    constants: constants
+    constants: constants,
+    hashtagInputRequirements: hashtagInputRequirements
   };
 })();

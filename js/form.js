@@ -2,7 +2,6 @@
 
 (function () {
 
-  var body = document.querySelector('body');
   var form = document.querySelector('.img-upload__form');
   var scale = form.querySelector('.scale');
   var scalePin = scale.querySelector('.scale__pin');
@@ -16,11 +15,11 @@
   var formCloseButton = form.querySelector('.img-upload__cancel');
 
   var addEffectChangeListeners = function () {
-    body.addEventListener('change', window.filter.onEffectRadioInputChange);
+    document.addEventListener('change', window.filter.onEffectRadioInputChange);
   };
 
   var removeEffectChangeListeners = function () {
-    body.removeEventListener('change', window.filter.onEffectRadioInputChange);
+    document.removeEventListener('change', window.filter.onEffectRadioInputChange);
   };
 
   var showForm = function () {
@@ -51,6 +50,7 @@
 
   var onFileInputChange = function () {
     showForm();
+    window.upload.updateImage();
   };
 
   var onFormCloseButtonClick = function () {
@@ -169,7 +169,6 @@
     });
   };
 
-  // hashtagInput.addEventListener('input', onFormSubmit);
   form.addEventListener('submit', onFormSubmit);
 
   window.uploadForm = {
@@ -178,6 +177,7 @@
     scalePin: scalePin,
     formImgElement: formImgElement,
     effectLevelInput: effectLevelInput,
-    effectLevel: effectLevel
+    effectLevel: effectLevel,
+    fileInput: fileInput
   };
 })();

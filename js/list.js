@@ -3,7 +3,6 @@
 (function () {
 
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
-  var pictureElement = document.querySelector('.pictures');
 
   var renderOnePhoto = function (photo) {
     var photoElement = pictureTemplate.cloneNode(true);
@@ -21,6 +20,7 @@
   };
 
   var renderAllPhotos = function (photos) {
+    var pictureElement = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < photos.length; i++) {
       fragment.appendChild(renderOnePhoto(photos[i]));

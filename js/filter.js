@@ -44,8 +44,12 @@
   };
 
   var resetFilters = function () {
-    window.uploadForm.form.querySelector('.effects__radio:checked').checked = false;
+    var checkedEffectRadio = window.uploadForm.form.querySelector('.effects__radio:checked');
+    if (checkedEffectRadio) {
+      checkedEffectRadio.checked = false;
+    }
     window.uploadForm.formImgElement.className = '';
+    window.uploadForm.formImgElement.style.filter = '';
   };
 
   var calcFilterValue = function (effect, percent) {
