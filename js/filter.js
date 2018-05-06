@@ -45,11 +45,13 @@
 
   var resetFilters = function () {
     var checkedEffectRadio = window.uploadForm.form.querySelector('.effects__radio:checked');
+    var defaultEffectValue = window.uploadForm.form.querySelector('.effects__default');
     if (checkedEffectRadio) {
       checkedEffectRadio.checked = false;
     }
     window.uploadForm.formImgElement.className = '';
     window.uploadForm.formImgElement.style.filter = '';
+    defaultEffectValue.checked = true;
   };
 
   var calcFilterValue = function (effect, percent) {
